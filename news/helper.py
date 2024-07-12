@@ -15,7 +15,6 @@ def get_domain(url: str) -> str:
 
 
 def get_page(url: str) -> str:
-    time.sleep(2)
     try:
         return requests.get(url)
     except:
