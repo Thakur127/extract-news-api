@@ -31,7 +31,7 @@ AVAILABLE_DOMAIN = [
 
 
 @router.get("/extract", status_code=200)
-async def news_extract(url: Annotated[str, Query(pattern=URL_PATTERN)]) -> NewsResponse:
+async def news_extract(url: Annotated[str, Query(pattern=URL_PATTERN)]):
     domain = get_domain(url)
     if domain not in AVAILABLE_DOMAIN:
         raise HTTPException(
