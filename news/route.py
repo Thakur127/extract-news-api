@@ -1,6 +1,7 @@
 from typing import Annotated
 from fastapi import APIRouter, Query, HTTPException
 from .schema import NewsResponse
+from fastapi.responses import StreamingResponse
 
 from news.helper import (
     get_domain,
@@ -30,7 +31,7 @@ AVAILABLE_DOMAIN = [
 
 
 @router.get("/extract", status_code=200)
-def news_extract(url: Annotated[str, Query(pattern=URL_PATTERN)]) -> NewsResponse:
+async def news_extract(url: Annotated[str, Query(pattern=URL_PATTERN)]) -> NewsResponse:
     domain = get_domain(url)
     if domain not in AVAILABLE_DOMAIN:
         raise HTTPException(
@@ -39,6 +40,6 @@ def news_extract(url: Annotated[str, Query(pattern=URL_PATTERN)]) -> NewsRespons
         )
     page = get_page(url)
     content = get_content_from_page(page, domain)
-    news = generate_news_from_context(content)
+    # generate_news_from_context(content)
 
-    return {"url": url, "news": news}
+    return StreamingResponse(generate_news_from_context(content))

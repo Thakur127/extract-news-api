@@ -40,7 +40,7 @@ def get_content_from_page(page: str, domain: str) -> str:
             raise ValueError("Please specify domain")
 
 
-def generate_news_from_context(context: str) -> str:
+async def generate_news_from_context(context: str) -> str:
     generation_config = {
         "temperature": 1,
         "top_p": 0.95,
@@ -58,5 +58,6 @@ def generate_news_from_context(context: str) -> str:
     
     CONTEXT:{context}'    
     """
-    response = model.generate_content(prompt)
-    return response.text
+    response = model.generate_content(prompt, stream=True)
+    for chunk in response:
+        yield chunk.text
